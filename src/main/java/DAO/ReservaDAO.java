@@ -35,23 +35,20 @@ public class ReservaDAO {
 		}
 	}
 	
+	
 	public static int obtenerReserva() {
-		List<Reservas> listReservas = new ArrayList<>();
+	int id = 0;
 		try {
 			Connection con = new ConnectionFactory().recuperaConexion();
 			PreparedStatement statement = con.prepareStatement(""
-					+ "SELECT ID,FECHA_ENTRADA,FECHA_SALIDA,VALOR,FORMA_PAGO FROM RESERVA");
+					+ "SELECT ID FROM RESERVA ORDER BY ID DESC LIMIT 1");
 			ResultSet resultSet = statement.executeQuery();	
 			while (resultSet.next()) {
-				Reservas reservas = new Reservas(resultSet.getInt("ID"),
-												resultSet.getDate("FECHA_ENTRADA"),
-												resultSet.getDate("FECHA_SALIDA"),
-												resultSet.getInt("VALOR"),
-												resultSet.getString("FORMA_PAGO"));
-				listReservas.add(reservas);
-			}				
-			con.close();
-			return listReservas.size();
+				id  = resultSet.getInt("ID");
+			}			
+			con.close();	
+			return id;
+
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -109,6 +106,24 @@ public class ReservaDAO {
 		statement.setInt(1, id);
 		statement.executeUpdate();
 		con.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
+	public static void editarReserva(Reservas reservas) {
+		try {
+			Connection con = new ConnectionFactory().recuperaConexion();
+			PreparedStatement statement = con.prepareStatement("UPDATE RESERVA SET "
+					+ "FECHA_ENTRADA = ?,FECHA_SALIDA = ?, VALOR = ?,FORMA_PAGO = ? "
+					+ "WHERE ID = ?");
+			statement.setDate(1, reservas.getFecha_entrada());
+			statement.setDate(2, reservas.getFecha_salida());
+			statement.setInt(3, reservas.getValor());
+			statement.setString(4, reservas.getForma_pago());
+			statement.setInt(5, reservas.getId());
+			statement.executeUpdate();
+			con.close();
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}

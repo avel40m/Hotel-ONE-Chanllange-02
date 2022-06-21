@@ -28,4 +28,9 @@ public class ReservaController {
 		ReservaDAO.eliminarReserva(id);
 		
 	}
+
+	public void modificarReserva(Reservas reservas) {
+		ReservaDAO.editarReserva(reservas);
+		
+	}
 }

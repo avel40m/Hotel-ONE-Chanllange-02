@@ -34,6 +34,7 @@ public class RegistroHuesped extends JFrame {
 	private JTextField txtApellido;
 	private JTextField txtTelefono;
 	private JTextField txtNreserva;
+	private ReservaController reservaController = new ReservaController();
 	/**
 	 * Launch the application.
 	 */
@@ -185,7 +186,7 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setColumns(10);
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBounds(576, 480, 255, 33);
-		txtNreserva.setText(String.valueOf(new ReservaController().obtenerUltimaReserva() + 1));
+		txtNreserva.setText(String.valueOf(reservaController.obtenerUltimaReserva()));
 		contentPane.add(txtNreserva);	
 		}
 	

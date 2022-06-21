@@ -23,6 +23,7 @@ import javax.swing.JOptionPane;
 
 import java.awt.Font;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -104,11 +105,28 @@ public class Busqueda extends JFrame {
 		btnEditar.setBounds(587, 416, 54, 41);
 		contentPane.add(btnEditar);
 		
+		
+		
 		JLabel lblNewLabel_4 = new JLabel("Sistema de Búsqueda");
 		lblNewLabel_4.setForeground(new Color(12, 138, 199));
 		lblNewLabel_4.setFont(new Font("Arial", Font.BOLD, 24));
 		lblNewLabel_4.setBounds(155, 42, 258, 42);
 		contentPane.add(lblNewLabel_4);
+		
+		btnEditar.addActionListener(new ActionListener() {
+			
+			public void actionPerformed(ActionEvent e) {
+				if (tbHuespedes.isVisible()) {
+					editarHuespedes();
+					limpiarTablaHuesped();
+					listarHuespedes();
+				} else if (tbReservas.isVisible()) {
+					editarReserva();
+					limpiarTablaResevas();
+					listarReservas();
+				}
+			}
+		});
 		
 		JButton btnSalir = new JButton("");
 		btnSalir.addActionListener(new ActionListener() {
@@ -249,6 +267,44 @@ public class Busqueda extends JFrame {
 	
 	private boolean tieneFilaHuesped() {
 		return tbHuespedes.getSelectedRowCount() == 0 || tbHuespedes.getSelectedRowCount() == 0;
+	}
+	
+	private void editarHuespedes() {
+		if (tieneFilaHuesped()) {
+			JOptionPane.showMessageDialog(null, "Elija un item");
+			return;
+		}
+		Optional.ofNullable(model1.getValueAt(tbHuespedes.getSelectedRow(), tbHuespedes.getSelectedColumn()))
+			.ifPresentOrElse(fila -> {
+				Huesped huesped = new Huesped(
+						(Integer) model1.getValueAt(tbHuespedes.getSelectedRow(), 0),
+						(String) model1.getValueAt(tbHuespedes.getSelectedRow(), 1),
+						(String) model1.getValueAt(tbHuespedes.getSelectedRow(), 2),
+						(Date) model1.getValueAt(tbHuespedes.getSelectedRow(), 3),
+						(String) model1.getValueAt(tbHuespedes.getSelectedRow(), 4),
+						(String) model1.getValueAt(tbHuespedes.getSelectedRow(), 5));
+				huespedDAO.modificarHuespedes(huesped);
+				JOptionPane.showMessageDialog(this, String.format("El item %s fue modificado correctamente!!!",
+																	huesped.getId()));
+			}, () -> JOptionPane.showMessageDialog(this, "Elija un item"));	
+	}
+	
+	private void editarReserva() {
+		if (tieneFilaElegida()) {
+			JOptionPane.showMessageDialog(null, "Elija un item");
+		}
+		Optional.ofNullable(model2.getValueAt(tbReservas.getSelectedRow(), tbReservas.getSelectedColumn()))
+			.ifPresentOrElse(fila -> {
+				Reservas reservas = new Reservas(
+						(Integer) model2.getValueAt(tbReservas.getSelectedRow(), 0),
+						Date.valueOf(model2.getValueAt(tbReservas.getSelectedRow(), 1).toString()),
+						Date.valueOf(model2.getValueAt(tbReservas.getSelectedRow(), 2).toString()),
+						Integer.valueOf(model2.getValueAt(tbReservas.getSelectedRow(), 3).toString()),
+						(String) model2.getValueAt(tbReservas.getSelectedRow(), 4));
+				reservaController.modificarReserva(reservas);
+				JOptionPane.showMessageDialog(this, String.format("El item %s fue modificado correctamente!!!",
+																reservas.getId()));
+			}, () -> JOptionPane.showMessageDialog(null, "Elija un item"));
 	}
 	
 	private void eliminarReserva() {

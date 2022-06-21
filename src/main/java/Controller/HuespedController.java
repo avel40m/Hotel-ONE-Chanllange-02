@@ -91,7 +91,6 @@ public class HuespedController {
 	}
 
 	public static void eliminarHuesped(Integer id) {
-		int idReserva = 0;
 		try {
 			final Connection con = new ConnectionFactory().recuperaConexion();
 			PreparedStatement statement = con.prepareStatement("DELETE FROM HUESPEDES WHERE ID = ?");
@@ -101,6 +100,26 @@ public class HuespedController {
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static void modificarHuesped(Huesped huesped) {
+		try {
+			Connection con = new ConnectionFactory().recuperaConexion();
+			PreparedStatement statement = con.prepareStatement("UPDATE HUESPEDES SET "
+					+ "NOMBRE = ?,APELLIDO = ?,FECHA_NACIMIENTO = ?,NACIONALIDAD = ?,TELEFONO = ? "
+					+ "WHERE ID = ?");
+			statement.setString(1, huesped.getNombre());
+			statement.setString(2, huesped.getApellido());
+			statement.setDate(3, huesped.getFecha_nacimiento());
+			statement.setString(4, huesped.getNacionalida());
+			statement.setString(5, huesped.getTelefono());
+			statement.setInt(6, huesped.getId());
+			statement.executeUpdate();
+			con.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
+		
 	}
 
 }

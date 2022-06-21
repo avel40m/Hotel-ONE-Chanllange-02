@@ -30,4 +30,8 @@ public class HuespedDAO {
 		HuespedController.eliminarHuesped(id);
 		
 	}
+
+	public void modificarHuespedes(Huesped huesped) {
+		HuespedController.modificarHuesped(huesped);
+	}
 }

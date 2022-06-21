@@ -38,5 +38,10 @@ public class Huesped {
 		return telefono;
 	}
 	
-	
+	@Override
+	public String toString() {
+		return String.format("{id: %s, Nombre: %s, Apellido: %s, Fecha Nacimiento: %s,"
+				+ " Nacionalidad: %s, Telefono: %s}",
+				this.id,this.nombre,this.apellido,this.fecha_nacimiento,this.nacionalida,this.telefono);
+	}
 }
