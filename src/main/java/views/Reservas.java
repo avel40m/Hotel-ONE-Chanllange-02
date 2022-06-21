@@ -6,10 +6,13 @@ import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import java.awt.SystemColor;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.ImageIcon;
 import java.awt.Color;
 import javax.swing.JTextField;
 import com.toedter.calendar.JDateChooser;
+
+import Controller.ReservaController;
 
 import java.awt.Font;
 import javax.swing.JComboBox;
@@ -18,6 +21,7 @@ import javax.swing.JPopupMenu;
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
 
 import javax.swing.JButton;
 import java.awt.event.ActionListener;
@@ -89,6 +93,7 @@ public class Reservas extends JFrame {
 		txtValor = new JTextField();
 		txtValor.setBounds(88, 303, 235, 33);
 		txtValor.setEnabled(false);
+		txtValor.setText("1000");
 		panel.add(txtValor);
 		txtValor.setColumns(10);
 		
@@ -118,8 +123,23 @@ public class Reservas extends JFrame {
 		btnReservar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				RegistroHuesped huesped = new RegistroHuesped();
-				huesped.setVisible(true);
-				dispose();
+				//MODIFICACION DE CODIGO
+				Date fechaEntrada =  formatearFecha(txtFechaE.getDate());
+				Date fechaSalida =   formatearFecha(txtFechaS.getDate());
+				int valor = Integer.valueOf(txtValor.getText());
+				String pago = (String) txtFormaPago.getSelectedItem();
+				//FALTA CODIFICAR
+				if (fechaEntrada != null && fechaSalida != null) {
+					ReservaController controller = new ReservaController();
+					controller.guardarReserva(fechaEntrada, fechaSalida, valor, pago);
+					huesped.setVisible(true);
+					dispose();
+				} else {
+					huesped.setVisible(false);
+					JOptionPane.showMessageDialog(null, "Complete los campos");
+				}
+				
+				
 			}
 		});
 		btnReservar.setForeground(Color.WHITE);
@@ -162,5 +182,9 @@ public class Reservas extends JFrame {
 				popup.show(e.getComponent(), e.getX(), e.getY());
 			}
 		});
+	}
+	
+	private static Date formatearFecha(java.util.Date fecha) {
+		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDay());
 	}
 }

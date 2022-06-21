@@ -7,14 +7,22 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.JTextField;
 import java.awt.Color;
 import com.toedter.calendar.JDateChooser;
+
+import Controller.HuespedController;
+import Controller.ReservaController;
+import DAO.HuespedDAO;
+
 import javax.swing.JComboBox;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Font;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import java.awt.SystemColor;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.awt.event.ActionEvent;
 import java.awt.Toolkit;
 
@@ -26,7 +34,6 @@ public class RegistroHuesped extends JFrame {
 	private JTextField txtApellido;
 	private JTextField txtTelefono;
 	private JTextField txtNreserva;
-
 	/**
 	 * Launch the application.
 	 */
@@ -113,8 +120,19 @@ public class RegistroHuesped extends JFrame {
 		btnGuardar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				Exito exito = new Exito();
+				//Modificcar codigo
+				String nombre = txtNombre.getText();
+				String apellido = txtApellido.getText();
+				Date nacimiento = formatearFecha(txtFechaN.getDate());
+				String nacionalidad =String.valueOf(txtNacionalidad.getSelectedItem());
+				String telefono = txtTelefono.getText();
+				int id_reserva = Integer.valueOf(txtNreserva.getText());
+				
+				new HuespedDAO().crearHuesped(nombre, apellido, nacimiento, nacionalidad, telefono, id_reserva);
+				
 				exito.setVisible(true);
-				dispose();
+				dispose();					
+				
 			}
 		});
 		btnGuardar.setIcon(new ImageIcon(RegistroHuesped.class.getResource("/imagenes/disquete.png")));
@@ -167,6 +185,11 @@ public class RegistroHuesped extends JFrame {
 		txtNreserva.setColumns(10);
 		txtNreserva.setBackground(Color.WHITE);
 		txtNreserva.setBounds(576, 480, 255, 33);
-		contentPane.add(txtNreserva);
+		txtNreserva.setText(String.valueOf(new ReservaController().obtenerUltimaReserva() + 1));
+		contentPane.add(txtNreserva);	
+		}
+	
+	private static Date formatearFecha(java.util.Date fecha) {
+		return new Date(fecha.getYear(), fecha.getMonth(), fecha.getDay());
 	}
 }
